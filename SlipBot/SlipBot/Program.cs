@@ -1,11 +1,12 @@
 ﻿using DSharpPlus;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.Configuration;
+using SlipBot.ButtonCommands;
 using SlipBot.SlashCommands;
-
 namespace SlipBot;
 
 public sealed class Program
@@ -32,12 +33,25 @@ public sealed class Program
         };
         Client = new DiscordClient(discordConfig);
         Client.Ready += Client_Ready;
+        Client.ComponentInteractionCreated += ButtonResponse;
 
         var slashCommandsConfig = Client.UseSlashCommands();
-        slashCommandsConfig.RegisterCommands<FunSL>(639850180551901245);
+        slashCommandsConfig.RegisterCommands<PollCommands>(639850180551901245);
 
         await Client.ConnectAsync();
         await Task.Delay(-1);
+    }
+
+    private static async Task ButtonResponse(DiscordClient sender, ComponentInteractionCreateEventArgs args)
+    {
+        if (args.Interaction.Data.CustomId == "1")
+        {
+            await ButtonInteractionHandler.Vote(args);
+        }
+        else
+        {
+            await args.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().WithContent("Une erreur s'est produite"));
+        }
     }
 
     private static Task Client_Ready(DiscordClient sender, ReadyEventArgs args)
