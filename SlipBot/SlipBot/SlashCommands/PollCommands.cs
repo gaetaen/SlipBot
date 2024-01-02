@@ -22,6 +22,7 @@ namespace SlipBot.SlashCommands
         {
             try
             {
+                // Defer de response to user
                 await context.DeferAsync(true);
 
                 // Map options to a dictionary for easier handling

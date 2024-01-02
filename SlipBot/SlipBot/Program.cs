@@ -44,7 +44,6 @@ namespace SlipBot
                 Client = client;
                 RegisterEventHandlers();
 
-                // Enable Interactivity module
                 Client.UseInteractivity();
 
                 var slashCommandsConfig = Client.UseSlashCommands();
@@ -70,7 +69,6 @@ namespace SlipBot
                 throw new InvalidOperationException("Client is null. Cannot register event handlers.");
             }
 
-            // Event handlers registration
             Client.Ready += Client_Ready;
             Client.ComponentInteractionCreated += ButtonResponse;
         }
@@ -95,7 +93,6 @@ namespace SlipBot
             catch (Exception ex)
             {
                 Log.Error(ex, "Error in ButtonResponse");
-
                 await args.Interaction.CreateResponseAsync(
                     InteractionResponseType.ChannelMessageWithSource,
                     new DiscordInteractionResponseBuilder().WithContent("Une erreur est survenue").AsEphemeral()
@@ -105,7 +102,6 @@ namespace SlipBot
 
         private static Task Client_Ready(DiscordClient sender, ReadyEventArgs args)
         {
-            // Initialization logic can be added here
             Log.Information("Bot is connected and ready!");
             return Task.CompletedTask;
         }
